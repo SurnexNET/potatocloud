@@ -1,5 +1,5 @@
-prefix: "<dark_gray>» <gradient:#55FF55:#DAF3DA>potatocloud</gradient> <dark_gray>• <reset>"
-no-permission: "<red>You do not have enough permissions for this command"
+prefix: "<dark_gray>» <dark_green><bold>Cloud</bold> <dark_gray>┃ <gray>"
+no-permission: "<red>Dazu hast du keine Rechte!"
 no-group: "<red>No service group found with the name <green>%name%"
 no-service: "<red>No service found with the name <green>%name%"
 no-player: "<red>No player found with the name <green>%name%"

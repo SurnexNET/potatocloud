@@ -10,7 +10,7 @@ maintenance: false
 tablist:
   header: " \n                      <dark_gray>» <gradient:#55FF55:#DAF3DA>potatocloud</gradient> <dark_gray>«                      \n<dark_gray>• <gray>Server<dark_gray>: <green>%service% <dark_gray>| <gray>Online<dark_gray>: <green>%online_players% <dark_gray>•\n "
   footer: "\n<dark_gray>• <gray>contributors <dark_gray>•\n<white>jirmjahu, TruaYT, einCode_\n "
-# %service%, %group%, %proxy%, %online_players%, %max_players%
+#replacements %service%, %group%, %proxy%, %online_players%, %max_players%
 
 motd:
   default:

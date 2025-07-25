@@ -31,11 +31,7 @@ public class ServiceStartQueue extends Thread {
                 return;
             }
 
-            if (event.getOldValue() == null || event.getNewValue() == null) {
-                return;
-            }
-
-            if (!event.getOldValue().equals("LOBBY")) {
+            if (event.getNewValue() == null) {
                 return;
             }
 

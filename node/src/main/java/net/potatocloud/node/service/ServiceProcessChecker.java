@@ -1,5 +1,10 @@
 package net.potatocloud.node.service;
 
+import net.potatocloud.api.event.EventManager;
+import net.potatocloud.api.event.events.service.ServiceStoppingEvent;
+import net.potatocloud.core.networking.NetworkServer;
+import net.potatocloud.node.Node;
+
 public class ServiceProcessChecker extends Thread {
 
     private final ServiceImpl service;
@@ -25,6 +30,14 @@ public class ServiceProcessChecker extends Thread {
 
         if (!isInterrupted()) {
             service.getLogger().info("Service &a" + service.getName() + " &7seems to be offline...");
+
+            final NetworkServer server = Node.getInstance().getServer();
+            final EventManager eventManager = Node.getInstance().getEventManager();
+
+            if (server != null && eventManager != null) {
+                eventManager.call(new ServiceStoppingEvent(service.getName()));
+            }
+
             service.cleanup();
         }
     }

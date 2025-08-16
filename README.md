@@ -10,12 +10,13 @@ A simple "cloud" system for Minecraft servers that is performant, customizable a
 
 ## Optional Plugins
 
-| Plugin Name          | Platform(s)       | Description                                                          |
-|----------------------|-------------------|----------------------------------------------------------------------|
-| Cloud Command Plugin | Velocity          | Allows you to manage many things ingame via commands                 |
-| Notify Plugin        | Velocity          | Sends notifications when servers start and stop                      |
-| Proxy Plugin         | Velocity          | Adds MOTD, Tablist(With Labymod support), Maintenance Mode           |
-| Hub Command Plugin   | Velocity          | Command for returning to an fallback server                          |
+| Plugin Name          | Platform(s)    | Description                                                |
+|----------------------|----------------|------------------------------------------------------------|
+| Cloud Command Plugin | Velocity       | Allows you to manage many things ingame via commands       |
+| Notify Plugin        | Velocity       | Sends notifications when servers start and stop            |
+| Proxy Plugin         | Velocity       | Adds MOTD, Tablist(With Labymod support), Maintenance Mode |
+| Hub Command Plugin   | Velocity       | Command for returning to an fallback server                |
+| LabyMod Plugin       | Bukkit / Paper | Set LabyMod game mode on join to current server            |
 
 ## API Dependency
 

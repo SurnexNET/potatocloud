@@ -32,6 +32,6 @@ public class Config {
     }
 
     public String notifyMessage() {
-        return this.config.getString("notify");
+        return this.config.getString("notify-message");
     }
 }

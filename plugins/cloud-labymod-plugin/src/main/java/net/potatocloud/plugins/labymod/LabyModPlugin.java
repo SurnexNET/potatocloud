@@ -1,7 +1,7 @@
 package net.potatocloud.plugins.labymod;
 
 import net.labymod.serverapi.server.bukkit.LabyModProtocolService;
-import net.potatocloud.plugins.labymod.listener.PlayerJoinListener;
+import net.potatocloud.plugins.labymod.listener.LabyModPlayerJoinListener;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -15,6 +15,6 @@ public class LabyModPlugin extends JavaPlugin {
         this.config.load();
         LabyModProtocolService.initialize(this);
 
-        Bukkit.getPluginManager().registerEvents(new PlayerJoinListener(this.config), this);
+        Bukkit.getPluginManager().registerEvents(new LabyModPlayerJoinListener(config), this);
     }
 }

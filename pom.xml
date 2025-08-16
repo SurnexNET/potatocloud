@@ -16,6 +16,10 @@
         <module>plugin</module>
         <module>plugins</module>
         <module>plugins/cloud-command-plugin</module>
+        <module>plugins/cloud-hub-plugin</module>
+        <module>plugins/cloud-notify-plugin</module>
+        <module>plugins/cloud-proxy-plugin</module>
+        <module>plugins/cloud-labymod-plugin</module>
     </modules>
 
     <properties>

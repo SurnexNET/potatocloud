@@ -27,6 +27,12 @@ public abstract class CloudAPI {
 
     public abstract CloudPlayerManager getPlayerManager();
 
-    public abstract Service getThisService();
+    /**
+     * @deprecated Use {@link ServiceManager#getCurrentService()} instead
+     */
+    @Deprecated
+    public Service getThisService() {
+        return getServiceManager().getCurrentService();
+    }
 
 }

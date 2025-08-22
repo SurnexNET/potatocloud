@@ -22,6 +22,7 @@ public class CloudCommandPlugin {
         this.messagesConfig = new MessagesConfig();
         messagesConfig.load();
         this.config = new Config();
+        config.load();
     }
 
     @Subscribe

@@ -31,6 +31,7 @@ import net.potatocloud.node.service.ServiceStartQueue;
 import net.potatocloud.node.setup.SetupManager;
 import net.potatocloud.node.template.TemplateManager;
 import net.potatocloud.node.update.UpdateChecker;
+import net.potatocloud.node.utils.VersionFile;
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
@@ -60,12 +61,16 @@ public class Node extends CloudAPI {
     private final ServiceManagerImpl serviceManager;
     private final ServiceStartQueue serviceStartQueue;
 
+    private final String oldVersion;
     private final long startedTime;
     private boolean isStopping;
 
     @SneakyThrows
     public Node() {
         config = new NodeConfig();
+        oldVersion = VersionFile.getVersion();
+        VersionFile.create();
+
         try {
             FileUtils.deleteDirectory(new File(config.getTempServicesFolder()));
         } catch (IOException ignored) {
@@ -79,48 +84,24 @@ public class Node extends CloudAPI {
         new ExceptionMessageHandler(logger);
 
         screenManager = new ScreenManager(console, logger);
-        Screen screen = new Screen(Screen.NODE_SCREEN);
-        screenManager.addScreen(screen);
-        screenManager.setCurrentScreen(screen);
+        final Screen nodeScreen = new Screen(Screen.NODE_SCREEN);
+        screenManager.addScreen(nodeScreen);
+        screenManager.setCurrentScreen(nodeScreen);
 
         setupManager = new SetupManager();
 
         updateChecker = new UpdateChecker();
-        try {
-            if (updateChecker.isUpdateAvailable()) {
-                logger.warn("A new version is available! &8(&7Latest&8: &a" + updateChecker.getLatestVersion() + "&8, &7Current&8: &a" + CloudAPI.VERSION + "&8)");
-            } else {
-                logger.info("You are running the latest version!");
-            }
-        } catch (Exception e) {
-            logger.warn("Failed to check for updates: " + e.getMessage());
-        }
+        checkForUpdates();
 
         packetManager = new PacketManager();
         server = new NettyNetworkServer(packetManager);
-
         server.start(config.getNodeHost(), config.getNodePort());
         logger.info("NetworkServer started using &aNetty &7on &a" + config.getNodeHost() + "&8:&a" + config.getNodePort());
 
         eventManager = new ServerEventManager(server);
-
         playerManager = new CloudPlayerManagerImpl(server);
 
-        final Path dataFolder = Path.of(config.getDataFolder());
-        final List<String> files = List.of("server.properties", "spigot.yml", "velocity.toml", "potatocloud-plugin.jar");
-
-        Files.createDirectories(dataFolder);
-        for (String name : files) {
-            try (InputStream stream = getClass().getClassLoader().getResourceAsStream("default-files/" + name)) {
-                if (stream == null) {
-                    continue;
-                }
-
-                FileUtils.copyInputStreamToFile(stream, dataFolder.resolve(name).toFile());
-            } catch (Exception e) {
-                logger.warn("Failed to copy default service file: " + name);
-            }
-        }
+        copyDefaultFiles();
 
         templateManager = new TemplateManager(logger, Path.of(config.getTemplatesFolder()));
         groupManager = new ServiceGroupManagerImpl(Path.of(config.getGroupsFolder()), server);
@@ -150,6 +131,37 @@ public class Node extends CloudAPI {
 
     public static Node getInstance() {
         return (Node) CloudAPI.getInstance();
+    }
+
+    private void checkForUpdates() {
+        try {
+            if (updateChecker.isUpdateAvailable()) {
+                logger.warn("A new version is available! &8(&7Latest&8: &a" + updateChecker.getLatestVersion() + "&8, &7Current&8: &a" + CloudAPI.VERSION + "&8)");
+            } else {
+                logger.info("You are running the latest version!");
+            }
+        } catch (Exception e) {
+            logger.warn("Failed to check for updates: " + e.getMessage());
+        }
+    }
+
+    @SneakyThrows
+    private void copyDefaultFiles() {
+        final Path dataFolder = Path.of(config.getDataFolder());
+        final List<String> files = List.of("server.properties", "spigot.yml", "velocity.toml", "potatocloud-plugin.jar");
+
+        Files.createDirectories(dataFolder);
+        for (String name : files) {
+            try (InputStream stream = getClass().getClassLoader().getResourceAsStream("default-files/" + name)) {
+                if (stream == null) {
+                    continue;
+                }
+
+                FileUtils.copyInputStreamToFile(stream, dataFolder.resolve(name).toFile());
+            } catch (Exception e) {
+                logger.warn("Failed to copy default service file: " + name);
+            }
+        }
     }
 
     private void registerCommands() {
@@ -205,6 +217,6 @@ public class Node extends CloudAPI {
     }
 
     public long getUptime() {
-        return (System.currentTimeMillis() - startedTime);
+        return System.currentTimeMillis() - startedTime;
     }
 }

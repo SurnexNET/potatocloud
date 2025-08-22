@@ -4,6 +4,7 @@ import net.potatocloud.api.CloudAPI;
 import net.potatocloud.api.group.ServiceGroup;
 import net.potatocloud.api.player.CloudPlayer;
 import net.potatocloud.api.property.PropertyHolder;
+import net.potatocloud.api.utils.TimeFormatter;
 
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -24,8 +25,16 @@ public interface Service extends PropertyHolder {
 
     long getStartTimestamp();
 
+    default String getFormattedStartTimestamp() {
+        return TimeFormatter.formatAsDateAndTime(getStartTimestamp());
+    }
+
     default long getUptime() {
         return System.currentTimeMillis() - getStartTimestamp();
+    }
+
+    default String getFormattedUptime() {
+        return TimeFormatter.formatAsDuration(getUptime());
     }
 
     default Set<CloudPlayer> getOnlinePlayers() {

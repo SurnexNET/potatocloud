@@ -62,9 +62,4 @@ public class PluginCloudAPI extends CloudAPI {
     public CloudPlayerManager getPlayerManager() {
         return playerManager;
     }
-
-    @Override
-    public Service getThisService() {
-        return serviceManager.getService(System.getProperty("potatocloud.service.name"));
-    }
 }

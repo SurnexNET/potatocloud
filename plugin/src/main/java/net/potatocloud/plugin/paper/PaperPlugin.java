@@ -2,16 +2,7 @@ package net.potatocloud.plugin.paper;
 
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.potatocloud.api.CloudAPI;
-import net.potatocloud.api.player.CloudPlayer;
-import net.potatocloud.api.player.CloudPlayerManager;
-import net.potatocloud.api.player.impl.CloudPlayerImpl;
-import net.potatocloud.api.property.Property;
 import net.potatocloud.api.service.Service;
-import net.potatocloud.core.networking.NetworkConnection;
-import net.potatocloud.core.networking.PacketIds;
-import net.potatocloud.core.networking.packets.player.CloudPlayerAddPacket;
-import net.potatocloud.core.networking.packets.player.CloudPlayerRemovePacket;
-import net.potatocloud.core.networking.packets.player.CloudPlayerUpdatePacket;
 import net.potatocloud.core.networking.packets.service.ServiceStartedPacket;
 import net.potatocloud.plugin.impl.PluginCloudAPI;
 import org.bukkit.event.EventHandler;
@@ -23,7 +14,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class PaperPlugin extends JavaPlugin implements Listener {
 
     private PluginCloudAPI api;
-    private Service thisService;
+    private Service currentService;
 
     @Override
     public void onLoad() {
@@ -32,66 +23,37 @@ public class PaperPlugin extends JavaPlugin implements Listener {
 
     @Override
     public void onEnable() {
-        initThisService();
-
-        final CloudPlayerManager playerManager = api.getPlayerManager();
-
-        api.getClient().registerPacketListener(PacketIds.PLAYER_ADD, (NetworkConnection connection, CloudPlayerAddPacket packet) -> {
-            playerManager.getOnlinePlayers().add(new CloudPlayerImpl(packet.getUsername(), packet.getUniqueId(), packet.getConnectedProxyName()));
-        });
-
-        api.getClient().registerPacketListener(PacketIds.PLAYER_REMOVE, (NetworkConnection connection, CloudPlayerRemovePacket packet) -> {
-            final CloudPlayer player = playerManager.getCloudPlayer(packet.getPlayerUniqueId());
-            if (player == null) {
-                return;
-            }
-            playerManager.getOnlinePlayers().remove(player);
-        });
-
-        api.getClient().registerPacketListener(PacketIds.PLAYER_UPDATE, (NetworkConnection connection, CloudPlayerUpdatePacket packet) -> {
-            final CloudPlayerImpl player = (CloudPlayerImpl) playerManager.getCloudPlayer(packet.getPlayerUniqueId());
-            if (player == null) {
-                return;
-            }
-
-            player.setConnectedProxyName(packet.getConnectedProxyName());
-            player.setConnectedServiceName(packet.getConnectedServiceName());
-
-            player.getProperties().clear();
-            for (Property property : packet.getProperties()) {
-                player.setProperty(property, property.getValue(), false);
-            }
-        });
+        initCurrentService();
 
         getServer().getPluginManager().registerEvents(this, this);
     }
 
-    private void initThisService() {
-        thisService = CloudAPI.getInstance().getThisService();
+    private void initCurrentService() {
+        currentService = CloudAPI.getInstance().getServiceManager().getCurrentService();
         // service manager is still null or the services have not finished loading
-        if (thisService == null) {
+        if (currentService == null) {
             // retry after 1 second
-            getServer().getScheduler().runTaskLater(this, this::initThisService, 20L);
+            getServer().getScheduler().runTaskLater(this, this::initCurrentService, 20L);
             return;
         }
 
-        api.getClient().send(new ServiceStartedPacket(thisService.getName()));
+        api.getClient().send(new ServiceStartedPacket(currentService.getName()));
     }
 
     @EventHandler
     public void onServerListPing(ServerListPingEvent event) {
-        if (thisService == null) {
+        if (currentService == null) {
             return;
         }
-        event.setMaxPlayers(thisService.getMaxPlayers());
+        event.setMaxPlayers(currentService.getMaxPlayers());
     }
 
     @EventHandler
     public void onPlayerLogin(PlayerLoginEvent event) {
-        if (thisService == null) {
+        if (currentService == null) {
             return;
         }
-        if (getServer().getOnlinePlayers().size() < thisService.getMaxPlayers()) {
+        if (getServer().getOnlinePlayers().size() < currentService.getMaxPlayers()) {
             return;
         }
         if (event.getPlayer().hasPermission("potatocloud.maxplayers.bypass")) {

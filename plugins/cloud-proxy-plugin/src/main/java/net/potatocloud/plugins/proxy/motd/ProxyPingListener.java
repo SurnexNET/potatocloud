@@ -23,7 +23,7 @@ public class ProxyPingListener {
 
     private ServerPing serverPing(ServerPing ping) {
         final int onlinePlayers = CloudAPI.getInstance().getPlayerManager().getOnlinePlayers().size();
-        final int maxPlayers = CloudAPI.getInstance().getThisService().getMaxPlayers();
+        final int maxPlayers = CloudAPI.getInstance().getServiceManager().getCurrentService().getMaxPlayers();
         final Motd motd = config.maintenance() ? config.maintenanceMotd() : config.defaultMotd();
 
         if (motd.version() == null) {
@@ -50,6 +50,4 @@ public class ProxyPingListener {
     private Component from(String string) {
         return miniMessage.deserialize(string);
     }
-
-
 }

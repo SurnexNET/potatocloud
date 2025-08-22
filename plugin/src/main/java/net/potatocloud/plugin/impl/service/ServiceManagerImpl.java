@@ -73,4 +73,9 @@ public class ServiceManagerImpl implements ServiceManager {
             startService(groupName);
         }
     }
+
+    @Override
+    public Service getCurrentService() {
+        return getService(System.getProperty("potatocloud.service.name"));
+    }
 }

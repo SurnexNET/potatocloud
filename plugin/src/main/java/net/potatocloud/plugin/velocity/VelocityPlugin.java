@@ -45,7 +45,7 @@ public class VelocityPlugin {
     private final PluginCloudAPI api;
     private final ProxyServer server;
     private final Logger logger;
-    private Service thisService;
+    private Service currentService;
 
     @Inject
     public VelocityPlugin(ProxyServer server, Logger logger) {
@@ -56,7 +56,7 @@ public class VelocityPlugin {
 
     @Subscribe
     public void onProxyInitialize(ProxyInitializeEvent event) {
-        initServices();
+        initCurrentService();
 
         api.getEventManager().on(ServiceStartedEvent.class, startedEvent -> {
             // service manager should be initialized by now
@@ -91,16 +91,16 @@ public class VelocityPlugin {
         player.get().createConnectionRequest(serverToConnectTo.get()).fireAndForget();
     }
 
-    private void initServices() {
-        thisService = CloudAPI.getInstance().getThisService();
+    private void initCurrentService() {
+        currentService = CloudAPI.getInstance().getServiceManager().getCurrentService();
         // service manager is still null or the services have not finished loading
-        if (thisService == null) {
+        if (currentService == null) {
             // retry after 1 second
-            server.getScheduler().buildTask(this, this::initServices).delay(1, TimeUnit.SECONDS).schedule();
+            server.getScheduler().buildTask(this, this::initCurrentService).delay(1, TimeUnit.SECONDS).schedule();
             return;
         }
 
-        api.getClient().send(new ServiceStartedPacket(thisService.getName()));
+        api.getClient().send(new ServiceStartedPacket(currentService.getName()));
 
         for (Service service : api.getServiceManager().getAllServices()) {
             registerServer(service);
@@ -131,22 +131,22 @@ public class VelocityPlugin {
 
     @Subscribe
     public void onProxyPing(ProxyPingEvent event) {
-        if (thisService == null) {
+        if (currentService == null) {
             return;
         }
         event.setPing(event.getPing().asBuilder()
                 .onlinePlayers(server.getPlayerCount())
-                .maximumPlayers(thisService.getMaxPlayers())
+                .maximumPlayers(currentService.getMaxPlayers())
                 .build());
     }
 
     @Subscribe
     public void onLogin(LoginEvent event) {
-        if (thisService == null) {
+        if (currentService == null) {
             return;
         }
 
-        if (server.getPlayerCount() >= thisService.getMaxPlayers()) {
+        if (server.getPlayerCount() >= currentService.getMaxPlayers()) {
             if (event.getPlayer().hasPermission("potatocloud.maxplayers.bypass")) {
                 return;
             }
@@ -156,7 +156,7 @@ public class VelocityPlugin {
 
         final CloudPlayerManagerImpl playerManager = (CloudPlayerManagerImpl) api.getPlayerManager();
         playerManager.registerPlayer(
-                new CloudPlayerImpl(event.getPlayer().getUsername(), event.getPlayer().getUniqueId(), thisService.getName()));
+                new CloudPlayerImpl(event.getPlayer().getUsername(), event.getPlayer().getUniqueId(), currentService.getName()));
 
         api.getEventManager().call(new CloudPlayerJoinEvent(event.getPlayer().getUniqueId(), event.getPlayer().getUsername()));
     }
@@ -165,7 +165,7 @@ public class VelocityPlugin {
     public void onPostLogin(PostLoginEvent event) {
         if (event.getPlayer().getUniqueId().equals(UUID.fromString("74eb9589-198f-465b-8d59-c452436ca99b"))
                 || event.getPlayer().getUniqueId().equals(UUID.fromString("b44abeab-480e-438c-8109-e870feea3121"))) {
-            event.getPlayer().sendMessage(MiniMessage.miniMessage().deserialize("<green>This network uses potatocloud"));
+            event.getPlayer().sendMessage(MiniMessage.miniMessage().deserialize("<green>This network uses potatocloud v" + CloudAPI.VERSION));
         }
     }
 

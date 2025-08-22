@@ -12,9 +12,7 @@ import net.potatocloud.node.command.TabCompleter;
 import net.potatocloud.node.console.Logger;
 import net.potatocloud.node.screen.Screen;
 import net.potatocloud.node.service.ServiceImpl;
-import net.potatocloud.node.utils.DurationUtil;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -23,7 +21,6 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class ServiceCommand implements Command, TabCompleter {
 
-    private static final SimpleDateFormat TIME_FORMAT = new SimpleDateFormat("HH:mm:ss");
     private final Logger logger;
     private final ServiceManager serviceManager;
     private final ServiceGroupManager groupManager;
@@ -53,10 +50,10 @@ public class ServiceCommand implements Command, TabCompleter {
     private void listServices() {
         final List<Service> services = serviceManager.getAllServices();
         if (services.isEmpty()) {
-            logger.info("There are &cno &7running services");
+            logger.info("There are &cno &7services");
             return;
         }
-        logger.info("All running services&8:");
+        logger.info("All services&8:");
         for (final Service service : services) {
             logger.info("&8» &a" + service.getName() + " &7- Group: &a" + service.getServiceGroup().getName() + " &7- Status: &a" + service.getStatus());
         }
@@ -126,11 +123,11 @@ public class ServiceCommand implements Command, TabCompleter {
         logger.info("&8» &7Online Players: &a" + service.getOnlinePlayerCount());
         logger.info("&8» &7Max Players: &a" + service.getMaxPlayers());
         logger.info("&8» &7Memory usage: &a" + service.getUsedMemory() + "MB");
-        logger.info("&8» &7Start Timestamp: &a" + TIME_FORMAT.format(service.getStartTimestamp()));
-        logger.info("&8» &7Online Time: &a" + DurationUtil.formatDuration(System.currentTimeMillis() - service.getStartTimestamp()));
+        logger.info("&8» &7Online Time: &a" + service.getFormattedUptime());
+        logger.info("&8» &7Start Timestamp: &a" + service.getFormattedStartTimestamp());
     }
 
-    private void executeService(String args[]) {
+    private void executeService(String[] args) {
         if (args.length < 3) {
             logger.info("&cUsage&8: &7service execute &8[&aname&8] [&acommand&8...]");
             return;

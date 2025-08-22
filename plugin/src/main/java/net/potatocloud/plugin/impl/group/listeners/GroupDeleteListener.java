@@ -1,7 +1,6 @@
 package net.potatocloud.plugin.impl.group.listeners;
 
 import lombok.RequiredArgsConstructor;
-import net.potatocloud.api.group.impl.ServiceGroupImpl;
 import net.potatocloud.core.networking.NetworkConnection;
 import net.potatocloud.core.networking.PacketListener;
 import net.potatocloud.core.networking.packets.group.GroupDeletePacket;

@@ -3,7 +3,6 @@ package net.potatocloud.plugins.cloudcommand.command;
 import com.velocitypowered.api.command.SimpleCommand;
 import com.velocitypowered.api.proxy.Player;
 import lombok.RequiredArgsConstructor;
-import net.potatocloud.plugins.cloudcommand.CloudCommandPlugin;
 import net.potatocloud.plugins.cloudcommand.Config;
 import net.potatocloud.plugins.cloudcommand.MessagesConfig;
 

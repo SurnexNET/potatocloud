@@ -1,7 +1,10 @@
 package net.potatocloud.core.networking;
 
 import net.potatocloud.core.networking.packets.EventPacket;
-import net.potatocloud.core.networking.packets.group.*;
+import net.potatocloud.core.networking.packets.group.GroupAddPacket;
+import net.potatocloud.core.networking.packets.group.GroupDeletePacket;
+import net.potatocloud.core.networking.packets.group.GroupUpdatePacket;
+import net.potatocloud.core.networking.packets.group.RequestGroupsPacket;
 import net.potatocloud.core.networking.packets.player.*;
 import net.potatocloud.core.networking.packets.service.*;
 

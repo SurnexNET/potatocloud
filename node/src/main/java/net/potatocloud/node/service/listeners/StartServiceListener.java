@@ -3,7 +3,6 @@ package net.potatocloud.node.service.listeners;
 import lombok.RequiredArgsConstructor;
 import net.potatocloud.api.group.ServiceGroup;
 import net.potatocloud.api.group.ServiceGroupManager;
-import net.potatocloud.api.service.Service;
 import net.potatocloud.api.service.ServiceManager;
 import net.potatocloud.core.networking.NetworkConnection;
 import net.potatocloud.core.networking.PacketListener;

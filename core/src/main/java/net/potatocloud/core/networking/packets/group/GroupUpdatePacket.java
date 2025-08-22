@@ -22,6 +22,8 @@ public class GroupUpdatePacket implements Packet {
     private int maxPlayers;
     private int maxMemory;
     private boolean fallback;
+    private int startPriority;
+    private int startPercentage;
     private List<String> serviceTemplates;
     private Set<Property> properties;
     private List<String> customJvmFlags;
@@ -39,6 +41,8 @@ public class GroupUpdatePacket implements Packet {
         buf.writeInt(maxPlayers);
         buf.writeInt(maxMemory);
         buf.writeBoolean(fallback);
+        buf.writeInt(startPriority);
+        buf.writeInt(startPercentage);
         buf.writeStringList(serviceTemplates);
         buf.writePropertySet(properties);
         buf.writeStringList(customJvmFlags);
@@ -52,6 +56,8 @@ public class GroupUpdatePacket implements Packet {
         maxPlayers = buf.readInt();
         maxMemory = buf.readInt();
         fallback = buf.readBoolean();
+        startPriority = buf.readInt();
+        startPercentage = buf.readInt();
         serviceTemplates = buf.readStringList();
         properties = buf.readPropertySet();
         customJvmFlags = buf.readStringList();

@@ -19,13 +19,17 @@ public class RequestGroupsListener implements PacketListener<RequestGroupsPacket
             connection.send(new GroupAddPacket(
                     group.getName(),
                     group.getPlatformName(),
-                    group.getServiceTemplates(),
                     group.getMinOnlineCount(),
                     group.getMaxOnlineCount(),
                     group.getMaxPlayers(),
                     group.getMaxMemory(),
                     group.isFallback(),
-                    group.isStatic()
+                    group.isStatic(),
+                    group.getStartPriority(),
+                    group.getStartPercentage(),
+                    group.getJavaCommand(),
+                    group.getCustomJvmFlags(),
+                    group.getProperties()
             ));
         }
     }

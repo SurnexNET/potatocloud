@@ -56,7 +56,7 @@ public class TablistHandler {
         final String proxy = cloudPlayer.getConnectedProxyName();
 
         final int onlinePlayers = CloudAPI.getInstance().getPlayerManager().getOnlinePlayers().size();
-        final int maxPlayers = CloudAPI.getInstance().getThisService().getMaxPlayers();
+        final int maxPlayers = CloudAPI.getInstance().getServiceManager().getCurrentService().getMaxPlayers();
 
         final Tablist tablist = this.config.tablist();
         final Component header = this.miniMessage.deserialize(tablist.header())

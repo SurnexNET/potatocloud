@@ -1,13 +1,16 @@
-package net.potatocloud.node.utils;
+package net.potatocloud.api.utils;
 
 import lombok.experimental.UtilityClass;
 
 import java.time.Duration;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 
 @UtilityClass
-public class DurationUtil {
+public class TimeFormatter {
 
-    public static String formatDuration(long millis) {
+    public static String formatAsDuration(long millis) {
         final Duration duration = Duration.ofMillis(millis);
 
         final long totalDays = duration.toDays();
@@ -41,4 +44,7 @@ public class DurationUtil {
         return builder.toString().trim();
     }
 
+    public static String formatAsDateAndTime(long millis) {
+        return DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").withZone(ZoneId.systemDefault()).format(Instant.ofEpochMilli(millis));
+    }
 }

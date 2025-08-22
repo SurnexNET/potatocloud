@@ -5,7 +5,6 @@ import net.potatocloud.api.CloudAPI;
 import net.potatocloud.api.event.EventManager;
 import net.potatocloud.api.group.ServiceGroupManager;
 import net.potatocloud.api.player.CloudPlayerManager;
-import net.potatocloud.api.service.Service;
 import net.potatocloud.api.service.ServiceManager;
 import net.potatocloud.core.event.ClientEventManager;
 import net.potatocloud.core.networking.NetworkClient;
@@ -61,10 +60,5 @@ public class PluginCloudAPI extends CloudAPI {
     @Override
     public CloudPlayerManager getPlayerManager() {
         return playerManager;
-    }
-
-    @Override
-    public Service getThisService() {
-        return serviceManager.getService(System.getProperty("potatocloud.service.name"));
     }
 }

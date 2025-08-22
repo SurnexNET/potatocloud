@@ -17,6 +17,7 @@ public class CloudPlayerAddPacket implements Packet {
     private String username;
     private UUID uniqueId;
     private String connectedProxyName;
+    private String connectedServiceName;
 
     @Override
     public int getId() {
@@ -28,6 +29,7 @@ public class CloudPlayerAddPacket implements Packet {
         buf.writeString(username);
         buf.writeString(uniqueId.toString());
         buf.writeString(connectedProxyName);
+        buf.writeString(connectedServiceName);
     }
 
     @Override
@@ -35,5 +37,6 @@ public class CloudPlayerAddPacket implements Packet {
         username = buf.readString();
         uniqueId = UUID.fromString(buf.readString());
         connectedProxyName = buf.readString();
+        connectedServiceName = buf.readString();
     }
 }

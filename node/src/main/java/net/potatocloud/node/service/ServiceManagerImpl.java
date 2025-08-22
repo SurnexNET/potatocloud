@@ -171,4 +171,9 @@ public class ServiceManagerImpl implements ServiceManager {
 
         return port;
     }
+
+    @Override
+    public Service getCurrentService() {
+        return null;
+    }
 }

@@ -6,6 +6,7 @@ import net.potatocloud.api.group.ServiceGroupManager;
 import net.potatocloud.core.networking.NetworkConnection;
 import net.potatocloud.core.networking.PacketListener;
 import net.potatocloud.core.networking.packets.group.GroupDeletePacket;
+import net.potatocloud.node.Node;
 
 @RequiredArgsConstructor
 public class GroupDeleteListener implements PacketListener<GroupDeletePacket> {
@@ -19,5 +20,9 @@ public class GroupDeleteListener implements PacketListener<GroupDeletePacket> {
             return;
         }
         groupManager.deleteServiceGroup(group);
+
+        Node.getInstance().getServer().getConnectedSessions().stream()
+                .filter(networkConnection -> !networkConnection.equals(connection))
+                .forEach(networkConnection -> networkConnection.send(packet));
     }
 }

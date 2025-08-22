@@ -8,6 +8,7 @@ import net.potatocloud.core.networking.packets.player.CloudPlayerConnectPacket;
 import net.potatocloud.node.player.listeners.CloudPlayerAddListener;
 import net.potatocloud.node.player.listeners.CloudPlayerRemoveListener;
 import net.potatocloud.node.player.listeners.CloudPlayerUpdateListener;
+import net.potatocloud.node.player.listeners.RequestCloudPlayersListener;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -24,6 +25,7 @@ public class CloudPlayerManagerImpl implements CloudPlayerManager {
         server.registerPacketListener(PacketIds.PLAYER_ADD, new CloudPlayerAddListener(this));
         server.registerPacketListener(PacketIds.PLAYER_REMOVE, new CloudPlayerRemoveListener(this));
         server.registerPacketListener(PacketIds.PLAYER_UPDATE, new CloudPlayerUpdateListener(this));
+        server.registerPacketListener(PacketIds.REQUEST_PLAYERS, new RequestCloudPlayersListener(this));
     }
 
     public void registerPlayer(CloudPlayer player) {

@@ -11,7 +11,6 @@ import net.potatocloud.api.property.Property;
 import net.potatocloud.api.service.Service;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -35,22 +34,35 @@ public class ServiceGroupImpl implements ServiceGroup {
     private List<String> customJvmFlags;
     private final Set<Property> properties;
 
-    public ServiceGroupImpl(String name, String platformName, List<String> serviceTemplates, int minOnlineCount, int maxOnlineCount, int maxPlayers, int maxMemory, boolean fallback, boolean isStatic) {
+    public ServiceGroupImpl(String name, String platformName, int minOnlineCount, int maxOnlineCount, int maxPlayers, int maxMemory, boolean fallback, boolean isStatic, int startPriority, int startPercentage, String javaCommand, List<String> customJvmFlags, Set<Property> properties) {
         this.name = name;
         this.platformName = platformName;
-        this.serviceTemplates = serviceTemplates;
         this.minOnlineCount = minOnlineCount;
         this.maxOnlineCount = maxOnlineCount;
         this.maxPlayers = maxPlayers;
         this.maxMemory = maxMemory;
         this.fallback = fallback;
         this.isStatic = isStatic;
+        this.startPriority = startPriority;
+        this.startPercentage = startPercentage;
+        this.javaCommand = javaCommand;
+        this.customJvmFlags = customJvmFlags;
+        this.properties = properties;
 
-        startPriority = 0;
-        startPercentage = 100;
-        javaCommand = "java";
-        customJvmFlags = new ArrayList<>();
-        properties = new HashSet<>();
+        this.serviceTemplates = new ArrayList<>();
+        addServiceTemplate("every");
+        addServiceTemplate(name);
+
+        final Platform platform = PlatformVersions.getPlatformByName(platformName);
+        if (platform == null) {
+            return;
+        }
+
+        if (platform.isProxy()) {
+            addServiceTemplate("every_proxy");
+        } else {
+            addServiceTemplate("every_service");
+        }
     }
 
     @Override

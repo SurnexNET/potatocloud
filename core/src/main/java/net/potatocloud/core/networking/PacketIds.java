@@ -15,13 +15,13 @@ public class PacketIds {
     public static final int REQUEST_GROUPS = 100;
     public static final int GROUP_ADD = 101;
     public static final int GROUP_UPDATE = 102;
-    public static final int GROUP_CREATE = 103;
     public static final int GROUP_DELETE = 104;
 
     public static final int PLAYER_ADD = 200;
     public static final int PLAYER_REMOVE = 201;
     public static final int PLAYER_UPDATE = 202;
     public static final int PLAYER_CONNECT = 203;
+    public static final int REQUEST_PLAYERS = 204;
 
     public static final int EVENT = 300;
 

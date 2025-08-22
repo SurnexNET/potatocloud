@@ -14,16 +14,26 @@ public class GroupAddListener implements PacketListener<GroupAddPacket> {
 
     @Override
     public void onPacket(NetworkConnection connection, GroupAddPacket packet) {
-        groupManager.addServiceGroup(new ServiceGroupImpl(
+        if (groupManager.existsServiceGroup(packet.getName())) {
+            return;
+        }
+
+        final ServiceGroupImpl group = new ServiceGroupImpl(
                 packet.getName(),
                 packet.getPlatformName(),
-                packet.getServiceTemplates(),
                 packet.getMinOnlineCount(),
                 packet.getMaxOnlineCount(),
                 packet.getMaxPlayers(),
                 packet.getMaxMemory(),
                 packet.isFallback(),
-                packet.isStatic()
-        ));
+                packet.isStatic(),
+                packet.getStartPriority(),
+                packet.getStartPercentage(),
+                packet.getJavaCommand(),
+                packet.getCustomJvmFlags(),
+                packet.getProperties()
+        );
+
+        groupManager.addServiceGroup(group);
     }
 }

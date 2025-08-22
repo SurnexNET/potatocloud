@@ -6,7 +6,7 @@
 
     <groupId>net.potatocloud</groupId>
     <artifactId>potatocloud</artifactId>
-    <version>1.1.0</version>
+    <version>1.2.0</version>
     <packaging>pom</packaging>
 
     <modules>
@@ -15,7 +15,6 @@
         <module>api</module>
         <module>plugin</module>
         <module>plugins</module>
-        <module>plugins/cloud-command-plugin</module>
     </modules>
 
     <properties>

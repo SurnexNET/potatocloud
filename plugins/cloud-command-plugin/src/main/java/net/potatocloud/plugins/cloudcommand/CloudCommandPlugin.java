@@ -13,6 +13,7 @@ public class CloudCommandPlugin {
     private final ProxyServer server;
     private final Logger logger;
     private final MessagesConfig messagesConfig;
+    private final Config config;
 
     @Inject
     public CloudCommandPlugin(ProxyServer server, Logger logger) {
@@ -20,11 +21,13 @@ public class CloudCommandPlugin {
         this.logger = logger;
         this.messagesConfig = new MessagesConfig();
         messagesConfig.load();
+        this.config = new Config();
+        config.load();
     }
 
     @Subscribe
     public void onProxyInitialize(ProxyInitializeEvent event) {
-        server.getCommandManager().register(server.getCommandManager().metaBuilder("cloud").build(), new CloudCommand(messagesConfig));
+        server.getCommandManager().register(server.getCommandManager().metaBuilder("cloud").aliases(this.config.aliases()).build(), new CloudCommand(messagesConfig, this.config));
     }
 }
 

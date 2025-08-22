@@ -35,4 +35,7 @@ public interface ServiceManager {
     default void startServices(ServiceGroup group, int count) {
         startServices(group.getName(), count);
     }
+
+    Service getCurrentService();
+
 }

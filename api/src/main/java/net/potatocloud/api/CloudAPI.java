@@ -13,6 +13,8 @@ public abstract class CloudAPI {
     @Getter
     private static CloudAPI instance;
 
+    public static final String VERSION = "1.2.0";
+
     public CloudAPI() {
         instance = this;
     }
@@ -25,6 +27,12 @@ public abstract class CloudAPI {
 
     public abstract CloudPlayerManager getPlayerManager();
 
-    public abstract Service getThisService();
+    /**
+     * @deprecated Use {@link ServiceManager#getCurrentService()} instead
+     */
+    @Deprecated
+    public Service getThisService() {
+        return getServiceManager().getCurrentService();
+    }
 
 }

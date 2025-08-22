@@ -104,7 +104,7 @@ service:
     not-found: "<gray>Property <green>%key% <gray>was <red>not found"
   copy:
     usage: "<red>Usage<dark_gray>: <gray>/cloud service copy [<green>name<dark_gray>] [<green>template<dark_gray>] (<green>filter<dark_gray>)"
-    success: "Copied <green>%files% <gray>to template: <green>%template%"
+    success: "<gray>Copied <green>%files% <gray>to template: <green>%template%"
 player:
   help:
     list: "<gray>/cloud player connect <dark_gray>[<green>player<dark_gray>] [<green>service<dark_gray>] <dark_gray>- <gray>List all online players"

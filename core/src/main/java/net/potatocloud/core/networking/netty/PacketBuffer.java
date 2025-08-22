@@ -16,13 +16,21 @@ public class PacketBuffer {
     private final ByteBuf buf;
 
     public void writeString(String string) {
+        if (string == null) {
+            buf.writeInt(-1);
+            return;
+        }
         final byte[] bytes = string.getBytes(StandardCharsets.UTF_8);
         buf.writeInt(bytes.length);
         buf.writeBytes(bytes);
     }
 
     public String readString() {
-        final byte[] bytes = new byte[buf.readInt()];
+        final int length = buf.readInt();
+        if (length == -1) {
+            return null;
+        }
+        final byte[] bytes = new byte[length];
         buf.readBytes(bytes);
         return new String(bytes, StandardCharsets.UTF_8);
     }

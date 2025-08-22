@@ -1,11 +1,11 @@
 package net.potatocloud.core.networking;
 
 import net.potatocloud.core.networking.packets.EventPacket;
-import net.potatocloud.core.networking.packets.group.*;
-import net.potatocloud.core.networking.packets.player.CloudPlayerAddPacket;
-import net.potatocloud.core.networking.packets.player.CloudPlayerConnectPacket;
-import net.potatocloud.core.networking.packets.player.CloudPlayerRemovePacket;
-import net.potatocloud.core.networking.packets.player.CloudPlayerUpdatePacket;
+import net.potatocloud.core.networking.packets.group.GroupAddPacket;
+import net.potatocloud.core.networking.packets.group.GroupDeletePacket;
+import net.potatocloud.core.networking.packets.group.GroupUpdatePacket;
+import net.potatocloud.core.networking.packets.group.RequestGroupsPacket;
+import net.potatocloud.core.networking.packets.player.*;
 import net.potatocloud.core.networking.packets.service.*;
 
 public class PacketRegistry {
@@ -24,13 +24,13 @@ public class PacketRegistry {
         manager.register(PacketIds.REQUEST_GROUPS, RequestGroupsPacket::new);
         manager.register(PacketIds.GROUP_ADD, GroupAddPacket::new);
         manager.register(PacketIds.GROUP_UPDATE, GroupUpdatePacket::new);
-        manager.register(PacketIds.GROUP_CREATE, GroupCreatePacket::new);
         manager.register(PacketIds.GROUP_DELETE, GroupDeletePacket::new);
 
         manager.register(PacketIds.PLAYER_ADD, CloudPlayerAddPacket::new);
         manager.register(PacketIds.PLAYER_REMOVE, CloudPlayerRemovePacket::new);
         manager.register(PacketIds.PLAYER_UPDATE, CloudPlayerUpdatePacket::new);
         manager.register(PacketIds.PLAYER_CONNECT, CloudPlayerConnectPacket::new);
+        manager.register(PacketIds.REQUEST_PLAYERS, RequestCloudPlayersPacket::new);
 
         manager.register(PacketIds.EVENT, EventPacket::new);
     }

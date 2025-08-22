@@ -10,12 +10,13 @@ A simple "cloud" system for Minecraft servers that is performant, customizable a
 
 ## Optional Plugins
 
-| Plugin Name          | Platform(s)       | Description                                                          |
-|----------------------|-------------------|----------------------------------------------------------------------|
-| Cloud Command Plugin | Velocity          | Allows you to manage many things ingame via commands                 |
-| Notify Plugin        | Velocity          | Sends notifications when servers start and stop                      |
-| Proxy Plugin         | Velocity          | Adds MOTD, Tablist(With Labymod support), Maintenance Mode           |
-| Hub Command Plugin   | Velocity          | Command for returning to an fallback server                          |
+| Plugin Name          | Platform(s)    | Description                                                |
+|----------------------|----------------|------------------------------------------------------------|
+| Cloud Command Plugin | Velocity       | Allows you to manage many things ingame via commands       |
+| Notify Plugin        | Velocity       | Sends notifications when servers start and stop            |
+| Proxy Plugin         | Velocity       | Adds MOTD, Tablist(With Labymod support), Maintenance Mode |
+| Hub Command Plugin   | Velocity       | Command for returning to an fallback server                |
+| LabyMod Plugin       | Bukkit / Paper | Set LabyMod game mode on join to current server            |
 
 ## API Dependency
 
@@ -33,7 +34,7 @@ A simple "cloud" system for Minecraft servers that is performant, customizable a
         <dependency>
             <groupId>com.github.potatocloudmc.potatocloud</groupId>
             <artifactId>api</artifactId>
-            <version>1.1.0</version>
+            <version>1.2.0</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>
@@ -47,7 +48,7 @@ repositories {
 }
 
 dependencies {
-    compileOnly("com.github.potatocloudmc.potatocloud:api:v1.1.0")
+    compileOnly("com.github.potatocloudmc.potatocloud:api:v1.2.0")
 }
 ```
 

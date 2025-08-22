@@ -5,18 +5,17 @@ import lombok.SneakyThrows;
 import net.potatocloud.api.group.ServiceGroup;
 import net.potatocloud.api.group.ServiceGroupManager;
 import net.potatocloud.api.group.impl.ServiceGroupImpl;
-import net.potatocloud.api.platform.Platform;
-import net.potatocloud.api.platform.PlatformVersions;
+import net.potatocloud.api.property.Property;
 import net.potatocloud.api.service.Service;
 import net.potatocloud.core.networking.NetworkServer;
 import net.potatocloud.core.networking.PacketIds;
 import net.potatocloud.core.networking.packets.group.GroupAddPacket;
 import net.potatocloud.core.networking.packets.group.GroupUpdatePacket;
 import net.potatocloud.node.Node;
-import net.potatocloud.node.group.listeners.GroupCreateListener;
+import net.potatocloud.node.group.listeners.GroupAddListener;
 import net.potatocloud.node.group.listeners.GroupDeleteListener;
-import net.potatocloud.node.group.listeners.RequestGroupsListener;
 import net.potatocloud.node.group.listeners.GroupUpdateListener;
+import net.potatocloud.node.group.listeners.RequestGroupsListener;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -24,6 +23,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Stream;
 
 public class ServiceGroupManagerImpl implements ServiceGroupManager {
@@ -41,7 +41,7 @@ public class ServiceGroupManagerImpl implements ServiceGroupManager {
 
         server.registerPacketListener(PacketIds.REQUEST_GROUPS, new RequestGroupsListener(this));
         server.registerPacketListener(PacketIds.GROUP_UPDATE, new GroupUpdateListener(this));
-        server.registerPacketListener(PacketIds.GROUP_CREATE, new GroupCreateListener(this));
+        server.registerPacketListener(PacketIds.GROUP_ADD, new GroupAddListener(this));
         server.registerPacketListener(PacketIds.GROUP_DELETE, new GroupDeleteListener(this));
     }
 
@@ -59,7 +59,7 @@ public class ServiceGroupManagerImpl implements ServiceGroupManager {
     }
 
     @Override
-    public ServiceGroup createServiceGroup(
+    public void createServiceGroup(
             String name,
             String platformName,
             int minOnlineCount,
@@ -67,52 +67,57 @@ public class ServiceGroupManagerImpl implements ServiceGroupManager {
             int maxPlayers,
             int maxMemory,
             boolean fallback,
-            boolean isStatic
+            boolean isStatic,
+            int startPriority,
+            int startPercentage,
+            String javaCommand,
+            List<String> customJvmFlags,
+            Set<Property> properties
     ) {
-        final List<String> templates = new ArrayList<>();
-        templates.add("every");
-        templates.add(name);
 
-        final Platform platform = PlatformVersions.getPlatformByName(platformName);
-
-        if (platform.isProxy()) {
-            templates.add("every_proxy");
-        } else {
-            templates.add("every_service");
-        }
-
-        for (String templateName : templates) {
-            Node.getInstance().getTemplateManager().createTemplate(templateName);
+        if (existsServiceGroup(name)) {
+            return;
         }
 
         final ServiceGroup serviceGroup = new ServiceGroupImpl(
                 name,
                 platformName,
-                templates,
                 minOnlineCount,
                 maxOnlineCount,
                 maxPlayers,
                 maxMemory,
                 fallback,
-                isStatic
+                isStatic,
+                startPriority,
+                startPercentage,
+                javaCommand,
+                customJvmFlags,
+                properties
         );
+
+        for (String templateName : serviceGroup.getServiceTemplates()) {
+            Node.getInstance().getTemplateManager().createTemplate(templateName);
+        }
 
         // send group add packet to clients
         server.broadcastPacket(new GroupAddPacket(
                 name,
                 platformName,
-                templates,
                 minOnlineCount,
                 maxOnlineCount,
                 maxPlayers,
                 maxMemory,
                 fallback,
-                isStatic
+                isStatic,
+                startPriority,
+                startPercentage,
+                javaCommand,
+                customJvmFlags,
+                properties
         ));
 
         ServiceGroupStorage.saveToFile(serviceGroup, groupsPath);
         groups.add(serviceGroup);
-        return serviceGroup;
     }
 
     @Override
@@ -123,7 +128,7 @@ public class ServiceGroupManagerImpl implements ServiceGroupManager {
             return;
         }
 
-        group.getOnlineServices().forEach(Service::shutdown);
+        group.getAllServices().forEach(Service::shutdown);
 
         groups.remove(group);
 
@@ -146,6 +151,8 @@ public class ServiceGroupManagerImpl implements ServiceGroupManager {
                 group.getMaxPlayers(),
                 group.getMaxMemory(),
                 group.isFallback(),
+                group.getStartPriority(),
+                group.getStartPercentage(),
                 group.getServiceTemplates(),
                 group.getProperties(),
                 group.getCustomJvmFlags()

@@ -20,7 +20,7 @@ public class ScreenManager {
     private Screen currentScreen = null;
     private final List<Screen> screens = new ArrayList<>();
 
-    public void switchScreen(String screenName) {
+    public void switchScreen(String screenName, boolean updatePrompt) {
         final Screen screen = getScreen(screenName);
         if (screen == null) {
             return;
@@ -39,8 +39,15 @@ public class ScreenManager {
             return;
         }
 
-        console.setPrompt("[" + screen.getName() + "] ");
+        if (updatePrompt) {
+            console.setPrompt("[" + screen.getName() + "] ");
+        }
+
         screen.getCachedLogs().forEach(console::println);
+    }
+
+    public void switchScreen(String screenName) {
+        switchScreen(screenName, true);
     }
 
     public Screen getScreen(String screenName) {

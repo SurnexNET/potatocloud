@@ -3,7 +3,6 @@ package net.potatocloud.core.event;
 import net.potatocloud.api.event.Event;
 import net.potatocloud.core.networking.NetworkClient;
 import net.potatocloud.core.networking.NetworkConnection;
-import net.potatocloud.core.networking.Packet;
 import net.potatocloud.core.networking.PacketIds;
 import net.potatocloud.core.networking.packets.EventPacket;
 

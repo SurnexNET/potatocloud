@@ -41,5 +41,4 @@ public class Config {
     public String permission() {
         return this.config.getString("permission");
     }
-
 }

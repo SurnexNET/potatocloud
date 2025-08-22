@@ -1,0 +1,4 @@
+permission: "potatocloud.command.cloud"
+aliases:
+  - potatocloud
+  - potato

@@ -28,7 +28,9 @@ import net.potatocloud.node.screen.ScreenManager;
 import net.potatocloud.node.service.ServiceImpl;
 import net.potatocloud.node.service.ServiceManagerImpl;
 import net.potatocloud.node.service.ServiceStartQueue;
+import net.potatocloud.node.setup.SetupManager;
 import net.potatocloud.node.template.TemplateManager;
+import net.potatocloud.node.update.UpdateChecker;
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
@@ -46,6 +48,8 @@ public class Node extends CloudAPI {
     private final Console console;
     private final Logger logger;
     private final ScreenManager screenManager;
+    private final SetupManager setupManager;
+    private final UpdateChecker updateChecker;
     private final PacketManager packetManager;
     private final NetworkServer server;
     private final EventManager eventManager;
@@ -78,6 +82,19 @@ public class Node extends CloudAPI {
         Screen screen = new Screen(Screen.NODE_SCREEN);
         screenManager.addScreen(screen);
         screenManager.setCurrentScreen(screen);
+
+        setupManager = new SetupManager();
+
+        updateChecker = new UpdateChecker();
+        try {
+            if (updateChecker.isUpdateAvailable()) {
+                logger.warn("A new version is available! &8(&7Latest&8: &a" + updateChecker.getLatestVersion() + "&8, &7Current&8: &a" + CloudAPI.VERSION + "&8)");
+            } else {
+                logger.info("You are running the latest version!");
+            }
+        } catch (Exception e) {
+            logger.warn("Failed to check for updates: " + e.getMessage());
+        }
 
         packetManager = new PacketManager();
         server = new NettyNetworkServer(packetManager);
@@ -164,11 +181,6 @@ public class Node extends CloudAPI {
     @Override
     public CloudPlayerManager getPlayerManager() {
         return playerManager;
-    }
-
-    @Override
-    public Service getThisService() {
-        return null;
     }
 
     @SneakyThrows

@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import net.potatocloud.api.CloudAPI;
 import net.potatocloud.api.group.ServiceGroup;
 import net.potatocloud.api.group.ServiceGroupManager;
-import net.potatocloud.api.platform.Platform;
 import net.potatocloud.api.platform.PlatformVersions;
 import net.potatocloud.api.property.Property;
 import net.potatocloud.api.service.Service;
@@ -12,6 +11,7 @@ import net.potatocloud.node.Node;
 import net.potatocloud.node.command.Command;
 import net.potatocloud.node.command.TabCompleter;
 import net.potatocloud.node.console.Logger;
+import net.potatocloud.node.setup.setups.GroupConfigurationSetup;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -219,41 +219,7 @@ public class GroupCommand implements Command, TabCompleter {
     }
 
     private void createGroup(String[] args) {
-        if (args.length < 9) {
-            logger.info("&cUsage&8: &7group create &8[&aname&8] [&aplatformName&8] [&aminOnlineCount&8] [&amaxOnlineCount&8] [&amaxPlayers&8] [&amaxMemory&8] [&afallback&8] [&astatic&8]");
-            return;
-        }
-
-        final String name = args[1];
-        if (groupManager.existsServiceGroup(name)) {
-            logger.info("&7A service group with the name &a" + name + " &calready exists");
-            return;
-        }
-
-        final String platformName = args[2];
-        final Platform platform = PlatformVersions.getPlatformByName(platformName);
-        if (platform == null) {
-            logger.info("&cThis platform does not exist!");
-            return;
-        }
-
-        try {
-            groupManager.createServiceGroup(
-                    name,
-                    platformName,
-                    Integer.parseInt(args[3]),
-                    Integer.parseInt(args[4]),
-                    Integer.parseInt(args[5]),
-                    Integer.parseInt(args[6]),
-                    Boolean.parseBoolean(args[7]),
-                    Boolean.parseBoolean(args[8])
-            );
-
-            logger.info("&7Service group &a" + name + " &7was created &asuccessfully");
-
-        } catch (NumberFormatException e) {
-            logger.info("&cUsage&8: &7group create &8[&aname&8] [&aplatformName&8] [&aminOnlineCount&8] [&amaxOnlineCount&8] [&amaxPlayers&8] [&amaxMemory&8] [&afallback&8] [&astatic&8]");
-        }
+        Node.getInstance().getSetupManager().startSetup(new GroupConfigurationSetup(Node.getInstance().getConsole(), Node.getInstance().getScreenManager(), groupManager));
     }
 
     private void deleteGroup(String[] args) {

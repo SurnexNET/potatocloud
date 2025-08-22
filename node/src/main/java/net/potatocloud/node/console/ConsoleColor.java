@@ -10,7 +10,7 @@ public enum ConsoleColor {
     GRAY('7', 188),
     RED('c', 203),
     BLUE('9', 63),
-    YELLOW('e', 226),
+    YELLOW('e', 220),
     GREEN('a', 42),
     WHITE('f', 15);
 
